@@ -2,16 +2,17 @@ package exercise;
 
 // BEGIN
 public class App {
-    public static void printSquare(Circle circle) {
+    public static void printSquare(Circle circle) throws NegativeRadiusException {
         try {
-            System.out.println(circle.getSquare());
-        } catch (NegativeRadiusException e) {
+            int result = (int) Math.round(circle.getSquare());
+            System.out.println(result);
+        } catch (NegativeRadiusException exception) {
             System.out.println("Не удалось посчитать площадь");
-            throw new RuntimeException(e);
         } finally {
             System.out.println("Вычисление окончено");
         }
 
     }
+
 }
 // END

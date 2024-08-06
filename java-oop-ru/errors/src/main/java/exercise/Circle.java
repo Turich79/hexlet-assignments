@@ -19,10 +19,12 @@ public class Circle {
     }
 
     public double getSquare() throws NegativeRadiusException {
-        if (radius<0) {
+        if (radius < 0) {
             throw new NegativeRadiusException("");
         }
-        return Math.PI * radius * radius;
+        var result = (double) (Math.PI * radius * radius);
+        return result;
     }
+
 }
 // END

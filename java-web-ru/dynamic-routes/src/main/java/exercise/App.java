@@ -20,6 +20,7 @@ public final class App {
         });
 
         // BEGIN
+        ////мое решение
         app.get("/companies/{number}", ctx -> {
             var companyNumber = ctx.pathParam("number");//ctx.pathParamAsClass("number", Integer.class).get();
             var isFound = false;
@@ -32,6 +33,17 @@ public final class App {
             if (!isFound) {
                 throw new NotFoundResponse("Company not found");
             }
+        });
+        ////решение учителя
+        app.get("/companies_/{id}", ctx -> {
+            var id = ctx.pathParam("id");
+
+            Map<String, String> company = COMPANIES.stream()
+                    .filter(c -> c.get("id").equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundResponse("Company not found"));
+
+            ctx.json(company);
         });
         // END
 

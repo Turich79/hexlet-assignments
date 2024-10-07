@@ -38,18 +38,29 @@ public final class App {
         });
 
         app.post("/users", ctx -> {
-            var firstName = ctx.formParam("firstName").trim();
-            firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
-            var lastName = ctx.formParam("lastName").trim();
-            lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+            var firstName = StringUtils.capitalize(ctx.formParam("firstName"));
+            var lastName = StringUtils.capitalize(ctx.formParam("lastName"));
             var email = ctx.formParam("email").trim().toLowerCase();
             var password = ctx.formParam("password");
-            password = Security.encrypt(password);
+            var encryptedPassword = Security.encrypt(password);
 
-            var user = new User(firstName, lastName, email, password);
+            var user = new User(firstName, lastName, email, encryptedPassword);
             UserRepository.save(user);
             ctx.redirect("/users");
         });
+//        app.post("/users", ctx -> {
+//            var firstName = ctx.formParam("firstName").trim();
+//            firstName = firstName.substring(0, 1).toUpperCase() + firstName.substring(1);
+//            var lastName = ctx.formParam("lastName").trim();
+//            lastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1);
+//            var email = ctx.formParam("email").trim().toLowerCase();
+//            var password = ctx.formParam("password");
+//            password = Security.encrypt(password);
+//
+//            var user = new User(firstName, lastName, email, password);
+//            UserRepository.save(user);
+//            ctx.redirect("/users");
+//        });
         // END
 
         return app;

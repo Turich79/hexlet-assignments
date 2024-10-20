@@ -11,4 +11,3 @@ public class BasePage {
     private String flashType;
 }
 // END
-

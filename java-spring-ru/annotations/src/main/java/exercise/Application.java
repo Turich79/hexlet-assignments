@@ -13,7 +13,7 @@ public class Application {
 
             if (method.isAnnotationPresent(Inspect.class)) {
 //                System.out.println("Executed method: " + method.getName());
-                System.out.println("Method " + method.getName() + " returns a value of type " + method.getGenericReturnType());
+                System.out.println("Method " + method.getName() + " returns a value of type " + method.getReturnType().getSimpleName());
             }
         }
         // END

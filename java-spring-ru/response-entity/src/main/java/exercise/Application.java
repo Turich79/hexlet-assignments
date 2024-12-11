@@ -30,57 +30,91 @@ public class Application {
     }
 
     // BEGIN
-//    @GetMapping("/posts")
-//    public List<Post> index(
-//            @RequestParam(defaultValue = "1") Integer page,
-//            @RequestParam(defaultValue = "10") Integer limit) {
-//
-//        return posts.stream().skip((page - 1) * limit).limit(limit).toList();
-//    }
     @GetMapping("/posts")
     public ResponseEntity<List<Post>> index(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer limit) {
-        var result = posts.stream().skip((page - 1) * limit).limit(limit).toList();
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .ok()
                 .header("X-Total-Count", String.valueOf(posts.size()))
-                .body(result);
+                .body(posts.stream().skip((page - 1) * limit).limit(limit).toList());
     }
 
-    @PostMapping("/posts") // Создание страницы
+    @PostMapping("/posts")
     public ResponseEntity<Post> create(@RequestBody Post post) {
         posts.add(post);
-        return ResponseEntity.status(201).body(post);
+        URI location = URI.create("/posts/" + post.getId());
+        return ResponseEntity.created(location).body(post);
     }
 
-    @GetMapping("/posts/{id}") // Вывод страницы
+    @GetMapping("/posts/{id}")
     public ResponseEntity<Post> show(@PathVariable String id) {
         var post = posts.stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
-        if (post.isPresent()) {
-            return ResponseEntity.ok().body(post.get());
-        } else {
-            return ResponseEntity.status(404).body(null);
-        }
+        return ResponseEntity.of(post);
     }
 
-    @PutMapping("/posts/{id}") // Обновление страницы
+    @PutMapping("/posts/{id}")
     public ResponseEntity<Post> update(@PathVariable String id, @RequestBody Post data) {
         var maybePost = posts.stream()
                 .filter(p -> p.getId().equals(id))
                 .findFirst();
+        var status = HttpStatus.NO_CONTENT;
         if (maybePost.isPresent()) {
-            var page = maybePost.get();
-            page.setId(data.getId());
-            page.setTitle(data.getTitle());
-            page.setBody(data.getBody());
-            return ResponseEntity.status(200).body(page);
-        } else {
-            return ResponseEntity.status(204).body(null);
+            var post = maybePost.get();
+            post.setId(data.getId());
+            post.setTitle(data.getTitle());
+            post.setBody(data.getBody());
+            status = HttpStatus.OK;
         }
+        return ResponseEntity.status(status).body(data);
     }
+//    @GetMapping("/posts")
+//    public ResponseEntity<List<Post>> index(
+//            @RequestParam(defaultValue = "1") Integer page,
+//            @RequestParam(defaultValue = "10") Integer limit) {
+//        var result = posts.stream().skip((page - 1) * limit).limit(limit).toList();
+//
+//        return ResponseEntity.ok()
+//                .header("X-Total-Count", String.valueOf(posts.size()))
+//                .body(result);
+//    }
+//
+//    @PostMapping("/posts") // Создание страницы
+//    public ResponseEntity<Post> create(@RequestBody Post post) {
+//        posts.add(post);
+//        return ResponseEntity.status(201).body(post);
+//    }
+//
+//    @GetMapping("/posts/{id}") // Вывод страницы
+//    public ResponseEntity<Post> show(@PathVariable String id) {
+//        var post = posts.stream()
+//                .filter(p -> p.getId().equals(id))
+//                .findFirst();
+//        if (post.isPresent()) {
+//            return ResponseEntity.ok().body(post.get());
+//        } else {
+//            return ResponseEntity.status(404).body(null);
+//        }
+//    }
+//
+//    @PutMapping("/posts/{id}") // Обновление страницы
+//    public ResponseEntity<Post> update(@PathVariable String id, @RequestBody Post data) {
+//        var maybePost = posts.stream()
+//                .filter(p -> p.getId().equals(id))
+//                .findFirst();
+//        if (maybePost.isPresent()) {
+//            var page = maybePost.get();
+//            page.setId(data.getId());
+//            page.setTitle(data.getTitle());
+//            page.setBody(data.getBody());
+//            return ResponseEntity.status(200).body(page);
+//        } else {
+//            return ResponseEntity.status(204).body(null);
+//        }
+//    }
     // END
 
     @DeleteMapping("/posts/{id}")

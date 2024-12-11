@@ -27,9 +27,16 @@ public class Application {
     }
 
     // BEGIN
-    @GetMapping("/posts") // Список страниц
-    public List<Post> index(@RequestParam(defaultValue = "10") Integer limit) {
-        return posts.stream().limit(limit).toList();
+//    @GetMapping("/posts") // Список страниц
+//    public List<Post> index(@RequestParam(defaultValue = "10") Integer limit) {
+//        return posts.stream().limit(limit).toList();
+//    }
+    @GetMapping("/posts")
+    public List<Post> index(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer limit) {
+
+        return posts.stream().skip((page - 1) * limit).limit(limit).toList();
     }
 
     @PostMapping("/posts") // Создание страницы

@@ -49,6 +49,9 @@ public class Guest {
 
     @Future
     private LocalDate cardValidUntil;
+
+
+
     // END
 
     @CreatedDate
